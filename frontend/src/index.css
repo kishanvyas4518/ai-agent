@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-primary: #10b981;
+  --color-primary-hover: #059669;
+  --color-accent-bg: rgba(16, 185, 129, 0.1);
+  --color-glass-bg: rgba(24, 24, 27, 0.6);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  background: radial-gradient(circle at top right, #064e3b 0%, #09090b 40%, #09090b 100%);
+  color: #f8fafc;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  background-attachment: fixed;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+.animate-typing-bounce {
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.animation-delay-1 {
+  animation-delay: -0.32s;
+}
+
+.animation-delay-2 {
+  animation-delay: -0.16s;
+}
+
