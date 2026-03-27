@@ -64,6 +64,6 @@ exports.publicChat = async (req, res) => {
 
   } catch (error) {
     console.error("Public API Error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message || "Internal server error", stack: error.stack });
   }
 };
