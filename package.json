@@ -6,8 +6,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "prisma generate && cd frontend && npm install && npm run build && cd .. && npm run copy-frontend",
-    "copy-frontend": "node -e \"const fs=require('fs'); fs.rmSync('public', {recursive:true, force:true}); fs.cpSync('frontend/dist', 'public', {recursive:true});\"",
+    "build": "prisma generate",
     "postinstall": "prisma generate"
   },
   "keywords": [],
