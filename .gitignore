@@ -1,5 +1,7 @@
-/node_modules
-/.env
+/backend/node_modules
+/backend/.env
 /error.log
 /frontend/node_modules
 /frontend/.env
+/node_modules
+/.env
