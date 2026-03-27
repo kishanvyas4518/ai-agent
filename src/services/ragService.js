@@ -1,6 +1,6 @@
 const { getIndex } = require('../config/pinecone');
 const aiService = require('./aiService');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 /**
  * Splits document into chunks, generates embeddings, and saves to Pinecone.
@@ -15,7 +15,7 @@ async function processAndStoreDocument(text, agentId, knowledgeId) {
       if (!chunk.trim()) continue;
       const embedding = await aiService.generateEmbedding(chunk);
       vectors.push({
-        id: String(uuidv4()),
+        id: crypto.randomUUID(),
         values: Array.from(embedding),
         metadata: { 
           agentId: String(agentId), 

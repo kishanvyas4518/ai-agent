@@ -30,10 +30,10 @@ exports.getApiCredentials = async (req, res) => {
 
     // Ensure apiSecret exists for existing accounts
     if (!client.apiSecret) {
-      const { v4: uuidv4 } = require('uuid');
+      const crypto = require('crypto');
       client = await prisma.client.update({
         where: { id: clientId },
-        data: { apiSecret: uuidv4() }
+        data: { apiSecret: crypto.randomUUID() }
       });
     }
 
@@ -63,8 +63,8 @@ exports.getAgents = async (req, res) => {
     // Ensure all agents have an API key (handles existing agents before schema update)
     const updatedAgents = await Promise.all(agents.map(async (agent) => {
       if (!agent.apiKey) {
-        const { v4: uuidv4 } = require('uuid');
-        const newKey = uuidv4();
+        const crypto = require('crypto');
+        const newKey = crypto.randomUUID();
         return await prisma.agent.update({
           where: { id: agent.id },
           data: { apiKey: newKey }
