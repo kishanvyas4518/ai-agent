@@ -9,18 +9,18 @@
       }
     },
     {
-      "src": "api/index.js",
+      "src": "backend/api/index.js",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "destination": "/backend/api/index.js"
     },
     {
       "source": "/webhook(.*)",
-      "destination": "/api/index.js"
+      "destination": "/backend/api/index.js"
     },
     {
       "source": "/(.*)",
@@ -28,3 +28,4 @@
     }
   ]
 }
+  
