@@ -1,10 +1,9 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../config/prisma');
 const ragService = require('../services/ragService');
 const aiService = require('../services/aiService');
 const axios = require('axios');
 const cheerio = require('cheerio');
-const pdfParse = require('pdf-parse');
+// pdf-parse is deferred to avoid startup crashes on Vercel
 
 exports.createAgent = async (req, res) => {
   try {
@@ -166,10 +165,9 @@ exports.uploadKnowledge = async (req, res) => {
     else if (type === 'FILE') {
       if (!req.file) throw new Error("No file uploaded");
       if (req.file.mimetype === 'application/pdf') {
-        const parser = new pdfParse.PDFParse({ data: req.file.buffer });
-        const pdfData = await parser.getText();
+        const pdfParse = require('pdf-parse');
+        const pdfData = await pdfParse(req.file.buffer);
         extractedText = pdfData.text;
-        await parser.destroy();
       } else if (req.file.mimetype.includes('text')) {
         extractedText = req.file.buffer.toString('utf8');
       } else {

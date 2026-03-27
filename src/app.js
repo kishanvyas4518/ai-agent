@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static('public')); // Serve local testing UI
 
 // Routes
+app.get('/api/health', (req, res) => res.json({ status: 'ok', environment: 'vercel' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', authMiddleware, adminRoutes); // Protected!
 app.use('/api/public', publicRoutes); // Public API with API Key!
