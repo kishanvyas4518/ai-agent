@@ -250,9 +250,9 @@
 
   // Very basic markdown parser to handle bold and newlines
   function parseMarkdown(text) {
-    let html = text.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
-    html = html.replace(/\\*(.*?)\\*/g, '<em>$1</em>');
-    html = html.replace(/\\n/g, '<br/>');
+    let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/\n/g, '<br/>');
     return html;
   }
 
