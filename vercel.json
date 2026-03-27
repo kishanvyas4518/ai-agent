@@ -1,31 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "backend/api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/backend/api/index.js"
-    },
-    {
-      "source": "/webhook(.*)",
-      "destination": "/backend/api/index.js"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api|webhook).*)",
       "destination": "/index.html"
     }
   ]
 }
-  
