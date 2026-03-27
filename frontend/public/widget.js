@@ -43,7 +43,6 @@
     #ai-widget-button svg {
       width: 30px;
       height: 30px;
-      fill: currentColor;
     }
     #ai-widget-chat {
       display: none;
@@ -220,8 +219,14 @@
       </div>
     </div>
     <button id="ai-widget-button">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-         <path d="M19,8H17V5c0-1.1-0.9-2-2-2h-3c0-1.66-1.34-3-3-3S6,1.34,6,3H3C1.9,3,1.01,3.9,1.01,5l-0.01,13c0,1.1,0.89,2,1.99,2h16c1.1,0,2-0.9,2-2V10C21,8.9,20.1,8,19,8z M8.5,15C7.67,15,7,14.33,7,13.5S7.67,12,8.5,12s1.5,0.67,1.5,1.5S9.33,15,8.5,15z M15.5,15c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5S16.33,15,15.5,15z M16,18H8v-2h8V18z"/>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v3" />
+        <path d="M4 7h16v11h-6l-4 4v-4H4z" />
+        <path d="M2 11v5" />
+        <path d="M22 11v5" />
+        <circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none" />
+        <circle cx="15" cy="12" r="1.5" fill="currentColor" stroke="none" />
+        <path d="M9 16.5c1.5 1.5 4.5 1.5 6 0" />
       </svg>
     </button>
   `;
