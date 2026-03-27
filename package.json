@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "prisma generate && cd frontend && npm install && npm run build",
     "postinstall": "prisma generate"
   },
   "keywords": [],
