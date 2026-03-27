@@ -7,6 +7,7 @@ import BotSetup from './pages/BotSetup';
 import Tester from './pages/Tester';
 import Home from './pages/Home';
 import OpenAPI from './pages/OpenAPI';
+import AiAssistant from './pages/AiAssistant';
 import Layout from './components/Layout';
 
 const ProtectedRoute = ({ children }) => {
@@ -33,6 +34,10 @@ export default function App() {
             <Route
               path="/openapi"
               element={<ProtectedRoute><OpenAPI /></ProtectedRoute>}
+            />
+            <Route
+              path="/ai-assistant"
+              element={<ProtectedRoute><AiAssistant /></ProtectedRoute>}
             />
             <Route
               path="/knowledge/:agentId"

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KIWI RAG Widget Test Page</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 40px; background: #f0f2f5; }
+    .content { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    h1 { color: #111827; }
+    p { color: #4b5563; line-height: 1.6; }
+  </style>
+
+  <!-- IMPORTANT: Put the configs in the HEAD just like a user might -->
+  <script>
+    window.AIAssistantConfig = {
+      apiUrl: "http://localhost:5173/api/public/chat",
+      clientSecret: "SOME_FAKE_SECRET_FOR_TESTING",
+      agentKey: "SOME_FAKE_KEY",
+      color: "#F59E0B",
+      title: "Kiwi Support Bot"
+    };
+  </script>
+  <!-- Since Vite dev server is running on 5173, we load it from there -->
+  <script src="http://localhost:5173/widget.js?v=test2"></script>
+
+</head>
+<body>
+  <div class="content">
+    <h1>Welcome to My Store</h1>
+    <p>This is a simulated external website. We have pasted the AI Assistant widget snippet directly into the &lt;head&gt; of this document.</p>
+    <p>If the widget script is robust, it should wait for the DOM to finish loading, and then automatically inject the floating action button into the bottom right corner of this page.</p>
+    <p>You should see a yellow floating button on the bottom right!</p>
+  </div>
+</body>
+</html>

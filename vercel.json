@@ -27,7 +27,11 @@
       "destination": "/frontend/assets/$1"
     },
     {
-      "source": "/((?!api|webhook|assets).*)",
+      "source": "/widget.js",
+      "destination": "/frontend/widget.js"
+    },
+    {
+      "source": "/((?!api|webhook|assets|widget.js).*)",
       "destination": "/frontend/index.html"
     }
   ]
