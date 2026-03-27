@@ -15,8 +15,12 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api|webhook).*)",
-      "destination": "/index.html"
+      "source": "/assets/(.*)",
+      "destination": "/frontend/assets/$1"
+    },
+    {
+      "source": "/((?!api|webhook|assets).*)",
+      "destination": "/frontend/index.html"
     }
   ]
 }
