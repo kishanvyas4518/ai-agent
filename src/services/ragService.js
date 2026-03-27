@@ -1,4 +1,4 @@
-const { index } = require('../config/pinecone');
+const { getIndex } = require('../config/pinecone');
 const aiService = require('./aiService');
 const { v4: uuidv4 } = require('uuid');
 
@@ -27,7 +27,7 @@ async function processAndStoreDocument(text, agentId, knowledgeId) {
 
     // Upsert to Pinecone vector DB
     if (vectors.length > 0) {
-      await index.upsert({ records: vectors });
+      await getIndex().upsert({ records: vectors });
     } else {
       throw new Error("No valid vectors were generated from the text. Please provide valid textual knowledge.");
     }
@@ -43,7 +43,7 @@ async function processAndStoreDocument(text, agentId, knowledgeId) {
 async function searchRelevantContext(query, agentId) {
   const queryEmbedding = await aiService.generateEmbedding(query);
   
-  const searchResults = await index.query({
+  const searchResults = await getIndex().query({
     vector: queryEmbedding,
     topK: 3,
     filter: { agentId: { $eq: agentId } },
@@ -58,7 +58,7 @@ async function searchRelevantContext(query, agentId) {
  */
 async function deleteDocument(knowledgeId) {
   try {
-    await index.deleteMany({ filter: { knowledgeId: { $eq: String(knowledgeId) } } });
+    await getIndex().deleteMany({ filter: { knowledgeId: { $eq: String(knowledgeId) } } });
   } catch(e) {
     console.log("Vector deletion notice (might not be supported on this tier without IDs):", e.message);
   }

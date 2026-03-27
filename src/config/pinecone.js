@@ -1,11 +1,16 @@
 const { Pinecone } = require('@pinecone-database/pinecone');
 const env = require('./env');
 
-const pc = new Pinecone({
-  apiKey: env.PINECONE_API_KEY
-});
+let index;
 
-// Access specific index
-const index = pc.Index(env.PINECONE_INDEX_NAME);
+const getIndex = () => {
+  if (!index) {
+    const pc = new Pinecone({
+      apiKey: env.PINECONE_API_KEY
+    });
+    index = pc.Index(env.PINECONE_INDEX_NAME);
+  }
+  return index;
+};
 
-module.exports = { pc, index };
+module.exports = { getIndex };
