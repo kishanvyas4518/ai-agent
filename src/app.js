@@ -20,8 +20,6 @@ app.use('/api/public', publicRoutes); // Public API with API Key!
 app.use('/webhook', webhookRoutes);
 
 // General health check route
-app.get('/', (req, res) => {
-  res.send('WhatsApp RAG SaaS Engine is running 🚀');
-});
+
 
 module.exports = app;
