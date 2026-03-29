@@ -77,7 +77,7 @@ IMPORTANT WHATSAPP FORMATTING RULES:
     };
 
     const sendResponse = await axios.post(
-      'https://api.11za.in/apis/sendMessage/sendMessages',
+      'https://internal.11za.in/apis/sendMessage/sendMessages',
       sendPayload,
       {
         headers: { 'Content-Type': 'application/json' },
