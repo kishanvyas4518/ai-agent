@@ -8,6 +8,7 @@ import Tester from './pages/Tester';
 import Home from './pages/Home';
 import OpenAPI from './pages/OpenAPI';
 import AiAssistant from './pages/AiAssistant';
+import WhatsAppIntegration from './pages/WhatsAppIntegration';
 import Layout from './components/Layout';
 
 const ProtectedRoute = ({ children }) => {
@@ -50,6 +51,10 @@ export default function App() {
             <Route
               path="/tester"
               element={<ProtectedRoute><Tester /></ProtectedRoute>}
+            />
+            <Route
+              path="/whatsapp"
+              element={<ProtectedRoute><WhatsAppIntegration /></ProtectedRoute>}
             />
             <Route path="/" element={<Navigate to="/home" />} />
           </Routes>

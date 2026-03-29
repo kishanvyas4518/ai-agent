@@ -20,16 +20,18 @@ model Client {
 }
 
 model Agent {
-  id           String      @id @default(uuid())
-  clientId     String
-  client       Client      @relation(fields: [clientId], references: [id])
-  name         String
-  role         String
-  systemPrompt String
-  apiKey       String?     @unique @default(uuid())
-  knowledge    Knowledge[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id                  String      @id @default(uuid())
+  clientId            String
+  client              Client      @relation(fields: [clientId], references: [id])
+  name                String
+  role                String
+  systemPrompt        String
+  apiKey              String?     @unique @default(uuid())
+  za11AuthToken       String?     // 11za WhatsApp API auth token
+  za11OriginWebsite   String?     // 11za origin website identifier
+  knowledge           Knowledge[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
 }
 
 model Knowledge {

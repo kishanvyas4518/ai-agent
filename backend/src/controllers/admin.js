@@ -225,3 +225,50 @@ exports.testChat = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+/**
+ * PUT /api/admin/agents/:agentId/11za-credentials
+ * Save 11za authToken and originWebsite credentials for an agent.
+ */
+exports.save11zaCredentials = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const { za11AuthToken, za11OriginWebsite } = req.body;
+
+    // Ensure agent belongs to this client
+    const agent = await prisma.agent.findFirst({ where: { id: agentId, clientId: req.user.clientId } });
+    if (!agent) return res.status(404).json({ error: "Agent not found" });
+
+    const updatedAgent = await prisma.agent.update({
+      where: { id: agentId },
+      data: { za11AuthToken, za11OriginWebsite }
+    });
+
+    res.status(200).json({ success: true, message: "11za credentials saved successfully", agentId });
+  } catch (error) {
+    console.error("Save 11za Credentials Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * GET /api/admin/agents/:agentId/11za-credentials
+ * Get 11za credentials for an agent.
+ */
+exports.get11zaCredentials = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+
+    const agent = await prisma.agent.findFirst({
+      where: { id: agentId, clientId: req.user.clientId },
+      select: { id: true, name: true, za11AuthToken: true, za11OriginWebsite: true }
+    });
+    if (!agent) return res.status(404).json({ error: "Agent not found" });
+
+    res.status(200).json({ success: true, agent });
+  } catch (error) {
+    console.error("Get 11za Credentials Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+

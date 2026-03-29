@@ -17,4 +17,9 @@ router.delete('/knowledge/:id', adminController.deleteKnowledge);
 
 router.post('/test-chat', adminController.testChat);
 
+// 11za WhatsApp Integration
+router.put('/agents/:agentId/11za-credentials', adminController.save11zaCredentials);
+router.get('/agents/:agentId/11za-credentials', adminController.get11zaCredentials);
+
 module.exports = router;
+

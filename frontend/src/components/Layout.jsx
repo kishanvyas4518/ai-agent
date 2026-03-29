@@ -1,6 +1,6 @@
 import { useAuth } from '../context/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, LogOut, MessageSquareText, Settings, Key, Bot } from 'lucide-react';
+import { LayoutDashboard, LogOut, MessageSquareText, Settings, Key, Bot, MessageSquare } from 'lucide-react';
 
 export default function Layout({ children }) {
   const { client, logout } = useAuth();
@@ -18,6 +18,7 @@ export default function Layout({ children }) {
     { name: 'AI Tester', path: '/tester', icon: MessageSquareText },
     { name: 'Website Widget', path: '/ai-assistant', icon: Bot },
     { name: 'Open API', path: '/openapi', icon: Key },
+    { name: 'WhatsApp', path: '/whatsapp', icon: MessageSquare },
   ];
 
   return (
