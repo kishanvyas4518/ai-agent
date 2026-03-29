@@ -47,6 +47,11 @@ exports.publicChat = async (req, res) => {
       return res.status(401).json({ error: "Invalid Agent Key or Agent does not belong to this account." });
     }
 
+    // Check if agent is active
+    if (!agent.isActive) {
+      return res.status(403).json({ error: "This agent is currently inactive. Please contact support." });
+    }
+
     // 3. RAG Search
     const context = await ragService.searchRelevantContext(message, agent.id);
     

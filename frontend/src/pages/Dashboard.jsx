@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BookOpen, Link as LinkIcon, FileText, MessageCircleQuestion, Upload, Trash2, Plus, Type, Loader2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useParams, Link } from 'react-router-dom';
@@ -10,6 +11,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
   const [agentInfo, setAgentInfo] = useState(null);
+  const [copied, setCopied] = useState(false);
   
   // Tab Inputs
   const [textContent, setTextContent] = useState('');

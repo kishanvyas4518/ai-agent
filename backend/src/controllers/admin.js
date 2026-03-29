@@ -272,3 +272,31 @@ exports.get11zaCredentials = async (req, res) => {
   }
 };
 
+/**
+ * PATCH /api/admin/agents/:agentId/toggle-status
+ * Toggle agent active/inactive status.
+ */
+exports.toggleAgentStatus = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+
+    const agent = await prisma.agent.findFirst({ where: { id: agentId, clientId: req.user.clientId } });
+    if (!agent) return res.status(404).json({ error: "Agent not found" });
+
+    const updated = await prisma.agent.update({
+      where: { id: agentId },
+      data: { isActive: !agent.isActive }
+    });
+
+    res.status(200).json({
+      success: true,
+      isActive: updated.isActive,
+      message: `Agent ${updated.isActive ? 'activated' : 'deactivated'} successfully`
+    });
+  } catch (error) {
+    console.error("Toggle Agent Status Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+

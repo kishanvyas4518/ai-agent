@@ -34,6 +34,12 @@ exports.handle11zaWebhook = async (req, res) => {
       return res.status(404).json({ error: 'Agent not found' });
     }
 
+    // Check if agent is active
+    if (!agent.isActive) {
+      console.log(`[11za Webhook] Agent ${agent.name} is inactive. Ignoring message.`);
+      return res.status(200).json({ success: true, message: 'Agent is inactive' });
+    }
+
     // Check 11za credentials on this agent
     if (!agent.za11AuthToken || !agent.za11OriginWebsite) {
       console.error(`[11za Webhook] 11za credentials not configured for agent: ${agentId}`);

@@ -21,5 +21,8 @@ router.post('/test-chat', adminController.testChat);
 router.put('/agents/:agentId/11za-credentials', adminController.save11zaCredentials);
 router.get('/agents/:agentId/11za-credentials', adminController.get11zaCredentials);
 
+// Agent Active/Inactive Toggle
+router.patch('/agents/:agentId/toggle-status', adminController.toggleAgentStatus);
+
 module.exports = router;
 

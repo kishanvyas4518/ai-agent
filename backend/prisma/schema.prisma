@@ -27,6 +27,7 @@ model Agent {
   role                String
   systemPrompt        String
   apiKey              String?     @unique @default(uuid())
+  isActive            Boolean     @default(true)
   za11AuthToken       String?     // 11za WhatsApp API auth token
   za11OriginWebsite   String?     // 11za origin website identifier
   knowledge           Knowledge[]
