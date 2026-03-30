@@ -63,7 +63,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-10 max-w-[1200px] w-full mx-auto max-md:p-5 h-full overflow-y-auto">
+    <div className="p-10 max-w-[1200px] w-full mx-auto max-md:p-5">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-10">
         <div>
           <h2 className="text-3xl font-bold mb-2 text-slate-50">Welcome, {client?.businessName || 'User'}! 👋</h2>

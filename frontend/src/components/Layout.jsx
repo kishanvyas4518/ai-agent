@@ -78,9 +78,11 @@ export default function Layout({ children }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-[#09090b] relative overflow-hidden flex flex-col">
-        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#10b981]/5 blur-[120px] rounded-full pointer-events-none"></div>
-        {children}
+      <main className="flex-1 bg-[#09090b] relative overflow-y-auto flex flex-col">
+        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#10b981]/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
+        <div className="relative z-10 flex flex-col flex-1">
+          {children}
+        </div>
       </main>
     </div>
   );

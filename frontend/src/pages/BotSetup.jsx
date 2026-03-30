@@ -50,7 +50,7 @@ export default function BotSetup() {
   };
 
   return (
-    <div className="p-10 max-w-[1200px] w-full mx-auto max-md:p-5 flex flex-col h-full overflow-y-auto">
+    <div className="p-10 max-w-[1200px] w-full mx-auto max-md:p-5 flex flex-col">
       <div className="mb-8">
         <h2 className="text-3xl font-bold mb-2 text-slate-50">Create New AI Agent</h2>
         <p className="text-slate-400 text-sm">Design a specialized bot with a custom name and focus.</p>
