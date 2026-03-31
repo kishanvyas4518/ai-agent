@@ -3,7 +3,7 @@ const ragService = require('../services/ragService');
 const aiService = require('../services/aiService');
 const axios = require('axios');
 const cheerio = require('cheerio');
-// pdf-parse is deferred to avoid startup crashes on Vercel
+// unpdf is used for PDF text extraction (serverless-compatible)
 
 exports.createAgent = async (req, res) => {
   try {
@@ -165,9 +165,10 @@ exports.uploadKnowledge = async (req, res) => {
     else if (type === 'FILE') {
       if (!req.file) throw new Error("No file uploaded");
       if (req.file.mimetype === 'application/pdf') {
-        const pdfParse = require('pdf-parse');
-        const pdfData = await pdfParse(req.file.buffer);
-        extractedText = pdfData.text;
+        const { extractText, getDocumentProxy } = require('unpdf');
+        const pdf = await getDocumentProxy(new Uint8Array(req.file.buffer));
+        const { text } = await extractText(pdf, { mergePages: true });
+        extractedText = text;
       } else if (req.file.mimetype.includes('text')) {
         extractedText = req.file.buffer.toString('utf8');
       } else {

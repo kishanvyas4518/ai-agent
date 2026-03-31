@@ -54,6 +54,8 @@ exports.handle11zaWebhook = async (req, res) => {
     // Build final system prompt
     const finalPrompt = `You are an AI assistant acting as a ${agent.role}. ${agent.systemPrompt}
 
+LANGUAGE RULE: You MUST detect the language of the user's message and reply in the SAME language. If the user writes in Hindi, reply in Hindi. If in English, reply in English. If in Gujarati, reply in Gujarati. If the user mixes languages (e.g. Hinglish), reply in the same mixed style. ALWAYS match the user's language exactly.
+
 IMPORTANT WHATSAPP FORMATTING RULES:
 - Do NOT use Markdown (no **, ##, *, etc.)
 - Use plain text with line breaks only
