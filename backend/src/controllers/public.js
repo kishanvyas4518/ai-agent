@@ -14,7 +14,7 @@ exports.publicChat = async (req, res) => {
   try {
     const clientSecret = req.headers['x-client-secret'];
     const agentKey = req.headers['x-agent-key'];
-    const { message } = req.body;
+    const { message, history } = req.body;
 
     if (!clientSecret || !agentKey) {
       return res.status(401).json({ 
@@ -59,7 +59,7 @@ exports.publicChat = async (req, res) => {
     const finalSystemPrompt = `You are an AI assistant acting as a ${agent.role}. ${agent.systemPrompt}`;
 
     // 5. Generate output
-    const reply = await aiService.generateChatResponse(message, context, finalSystemPrompt);
+    const reply = await aiService.generateChatResponse(message, context, finalSystemPrompt, history);
 
     res.status(200).json({
       success: true,

@@ -207,7 +207,7 @@
         <button id="ai-widget-close">&times;</button>
       </div>
       <div id="ai-widget-messages">
-        <div class="ai-widget-msg bot">Hi there! How can I assist you today?</div>
+        <!-- Initial messages will be injected here dynamically -->
       </div>
       <div id="ai-widget-input-area">
         <input type="text" id="ai-widget-input" placeholder="Type your message..." autocomplete="off">
@@ -241,6 +241,21 @@
   const btnSend = document.getElementById('ai-widget-send');
 
   let isOpen = false;
+  
+  // Create a unique key for this client/agent so histories don't clash
+  const storageKey = `ai_chat_history_${agentKey}`;
+  
+  // 1. Initialize from localStorage
+  let chatHistory = [];
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) chatHistory = JSON.parse(saved);
+  } catch(e) {}
+
+  // Save history helper function
+  function syncHistoryToStorage() {
+    localStorage.setItem(storageKey, JSON.stringify(chatHistory));
+  }
 
   btnOpen.addEventListener('click', () => {
     isOpen = !isOpen;
@@ -273,6 +288,21 @@
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 
+  // 2. Render previous messages on load
+  function renderInitialMessages() {
+    if (chatHistory.length === 0) {
+      // Default welcome message if no history
+      addMessage("Hi there! How can I assist you today?", 'bot');
+    } else {
+      // Restore past messages
+      chatHistory.forEach(msg => {
+        addMessage(msg.text, msg.role);
+      });
+    }
+  }
+  
+  renderInitialMessages();
+
   function showTyping() {
     const el = document.createElement('div');
     el.className = 'ai-widget-typing';
@@ -304,7 +334,7 @@
           'x-client-secret': clientSecret,
           'x-agent-key': agentKey
         },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, history: chatHistory })
       });
 
       const data = await response.json();
@@ -317,6 +347,9 @@
           document.getElementById('ai-widget-title').textContent = data.agentName;
         }
         addMessage(data.reply, 'bot');
+        chatHistory.push({ role: 'user', text: text });
+        chatHistory.push({ role: 'bot', text: data.reply });
+        syncHistoryToStorage(); // 3. Update storage on new messages
       } else {
         addMessage("Sorry, I encountered an error: " + (data.error || "Unknown error"), 'bot');
       }
