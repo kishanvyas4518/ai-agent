@@ -1,21 +1,21 @@
-(function() {
+(function () {
   function initWidget() {
-  // Read config
-  const config = window.AIAssistantConfig || {};
-  const apiUrl = config.apiUrl || "https://ai-agent-mu-seven.vercel.app/api/public/chat";
-  const agentKey = config.agentKey;
-  const clientSecret = config.clientSecret;
-  const primaryColor = config.color || "#4F46E5";
-  const title = config.title || "AI Assistant";
+    // Read config
+    const config = window.AIAssistantConfig || {};
+    const apiUrl = config.apiUrl || "https://ai-agent-mu-seven.vercel.app/api/public/chat";
+    const agentKey = config.agentKey;
+    const clientSecret = config.clientSecret;
+    const primaryColor = config.color || "#4F46E5";
+    const title = config.title || "AI Assistant";
 
-  if (!agentKey || !clientSecret) {
-    console.warn("AI Assistant Widget: Missing agentKey or clientSecret in window.AIAssistantConfig");
-    return;
-  }
+    if (!agentKey || !clientSecret) {
+      console.warn("AI Assistant Widget: Missing agentKey or clientSecret in window.AIAssistantConfig");
+      return;
+    }
 
-  // Inject CSS
-  const style = document.createElement('style');
-  style.innerHTML = `
+    // Inject CSS
+    const style = document.createElement('style');
+    style.innerHTML = `
     #ai-widget-container {
       position: fixed;
       bottom: 20px;
@@ -194,13 +194,13 @@
       }
     }
   `;
-  document.head.appendChild(style);
+    document.head.appendChild(style);
 
-  // Build DOM
-  const container = document.createElement('div');
-  container.id = 'ai-widget-container';
-  
-  container.innerHTML = `
+    // Build DOM
+    const container = document.createElement('div');
+    container.id = 'ai-widget-container';
+
+    container.innerHTML = `
     <div id="ai-widget-chat">
       <div id="ai-widget-header">
         <span id="ai-widget-title">${title}</span>
@@ -230,140 +230,141 @@
       </svg>
     </button>
   `;
-  document.body.appendChild(container);
+    document.body.appendChild(container);
 
-  // Logic
-  const btnOpen = document.getElementById('ai-widget-button');
-  const btnClose = document.getElementById('ai-widget-close');
-  const chatWindow = document.getElementById('ai-widget-chat');
-  const messagesDiv = document.getElementById('ai-widget-messages');
-  const inputField = document.getElementById('ai-widget-input');
-  const btnSend = document.getElementById('ai-widget-send');
+    // Logic
+    const btnOpen = document.getElementById('ai-widget-button');
+    const btnClose = document.getElementById('ai-widget-close');
+    const chatWindow = document.getElementById('ai-widget-chat');
+    const messagesDiv = document.getElementById('ai-widget-messages');
+    const inputField = document.getElementById('ai-widget-input');
+    const btnSend = document.getElementById('ai-widget-send');
 
-  let isOpen = false;
-  
-  // Create a unique key for this client/agent so histories don't clash
-  const storageKey = `ai_chat_history_${agentKey}`;
-  
-  // 1. Initialize from localStorage
-  let chatHistory = [];
-  try {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) chatHistory = JSON.parse(saved);
-  } catch(e) {}
+    let isOpen = false;
 
-  // Save history helper function
-  function syncHistoryToStorage() {
-    localStorage.setItem(storageKey, JSON.stringify(chatHistory));
-  }
+    // Create a unique key for this client/agent so histories don't clash
+    const storageKey = `ai_chat_history_${agentKey}`;
 
-  btnOpen.addEventListener('click', () => {
-    isOpen = !isOpen;
-    chatWindow.style.display = isOpen ? 'flex' : 'none';
-    if(isOpen) inputField.focus();
-  });
-
-  btnClose.addEventListener('click', () => {
-    isOpen = false;
-    chatWindow.style.display = 'none';
-  });
-
-  // Very basic markdown parser to handle bold and newlines
-  function parseMarkdown(text) {
-    let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    html = html.replace(/\n/g, '<br/>');
-    return html;
-  }
-
-  function addMessage(text, sender) {
-    const el = document.createElement('div');
-    el.className = 'ai-widget-msg ' + sender;
-    if (sender === 'bot') {
-       el.innerHTML = parseMarkdown(text);
-    } else {
-       el.textContent = text;
-    }
-    messagesDiv.appendChild(el);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-
-  // 2. Render previous messages on load
-  function renderInitialMessages() {
-    if (chatHistory.length === 0) {
-      // Default welcome message if no history
-      addMessage("Hi there! How can I assist you today?", 'bot');
-    } else {
-      // Restore past messages
-      chatHistory.forEach(msg => {
-        addMessage(msg.text, msg.role);
-      });
-    }
-  }
-  
-  renderInitialMessages();
-
-  function showTyping() {
-    const el = document.createElement('div');
-    el.className = 'ai-widget-typing';
-    el.id = 'ai-widget-typing-indicator';
-    el.innerHTML = '<div class="ai-widget-dot"></div><div class="ai-widget-dot"></div><div class="ai-widget-dot"></div>';
-    messagesDiv.appendChild(el);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-
-  function hideTyping() {
-    const el = document.getElementById('ai-widget-typing-indicator');
-    if(el) el.remove();
-  }
-
-  async function sendMessage() {
-    const text = inputField.value.trim();
-    if (!text) return;
-
-    inputField.value = '';
-    btnSend.disabled = true;
-    addMessage(text, 'user');
-    showTyping();
-
+    // 1. Initialize from localStorage
+    let chatHistory = [];
     try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-client-secret': clientSecret,
-          'x-agent-key': agentKey
-        },
-        body: JSON.stringify({ message: text, history: chatHistory })
-      });
+      const saved = localStorage.getItem(storageKey);
+      if (saved) chatHistory = JSON.parse(saved);
+    } catch (e) { }
 
-      const data = await response.json();
-      hideTyping();
-      btnSend.disabled = false;
-
-      if (response.ok && data.reply) {
-        // Change title if agent name is provided
-        if (data.agentName && config.updateTitle) {
-          document.getElementById('ai-widget-title').textContent = data.agentName;
-        }
-        addMessage(data.reply, 'bot');
-        chatHistory.push({ role: 'user', text: text });
-        chatHistory.push({ role: 'bot', text: data.reply });
-        syncHistoryToStorage(); // 3. Update storage on new messages
-      } else {
-        addMessage("Sorry, I encountered an error: " + (data.error || "Unknown error"), 'bot');
-      }
-    } catch (err) {
-      hideTyping();
-      btnSend.disabled = false;
-      addMessage("Network error. Please try again.", 'bot');
+    // Save history helper function
+    function syncHistoryToStorage() {
+      localStorage.setItem(storageKey, JSON.stringify(chatHistory));
     }
-  }
 
-  btnSend.addEventListener('click', sendMessage);
-  inputField.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-  });
+    btnOpen.addEventListener('click', () => {
+      isOpen = !isOpen;
+      chatWindow.style.display = isOpen ? 'flex' : 'none';
+      if (isOpen) inputField.focus();
+    });
+
+    btnClose.addEventListener('click', () => {
+      isOpen = false;
+      chatWindow.style.display = 'none';
+    });
+
+    // Very basic markdown parser to handle bold and newlines
+    function parseMarkdown(text) {
+      let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      html = html.replace(/\n/g, '<br/>');
+      return html;
+    }
+
+    function addMessage(text, sender) {
+      const el = document.createElement('div');
+      el.className = 'ai-widget-msg ' + sender;
+      if (sender === 'bot') {
+        el.innerHTML = parseMarkdown(text);
+      } else {
+        el.textContent = text;
+      }
+      messagesDiv.appendChild(el);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // 2. Render previous messages on load
+    function renderInitialMessages() {
+      if (chatHistory.length === 0) {
+        // Default welcome message if no history
+        addMessage("Hi there! How can I assist you today?", 'bot');
+      } else {
+        // Restore past messages
+        chatHistory.forEach(msg => {
+          addMessage(msg.text, msg.role);
+        });
+      }
+    }
+
+    renderInitialMessages();
+
+    function showTyping() {
+      const el = document.createElement('div');
+      el.className = 'ai-widget-typing';
+      el.id = 'ai-widget-typing-indicator';
+      el.innerHTML = '<div class="ai-widget-dot"></div><div class="ai-widget-dot"></div><div class="ai-widget-dot"></div>';
+      messagesDiv.appendChild(el);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideTyping() {
+      const el = document.getElementById('ai-widget-typing-indicator');
+      if (el) el.remove();
+    }
+
+    async function sendMessage() {
+      const text = inputField.value.trim();
+      if (!text) return;
+
+      inputField.value = '';
+      btnSend.disabled = true;
+      addMessage(text, 'user');
+      showTyping();
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-client-secret': clientSecret,
+            'x-agent-key': agentKey
+          },
+          body: JSON.stringify({ message: text, history: chatHistory })
+        });
+
+
+        const data = await response.json();
+        hideTyping();
+        btnSend.disabled = false;
+
+        if (response.ok && data.reply) {
+          // Change title if agent name is provided
+          if (data.agentName && config.updateTitle) {
+            document.getElementById('ai-widget-title').textContent = data.agentName;
+          }
+          addMessage(data.reply, 'bot');
+          chatHistory.push({ role: 'user', text: text });
+          chatHistory.push({ role: 'bot', text: data.reply });
+          syncHistoryToStorage(); // 3. Update storage on new messages
+        } else {
+          addMessage("Sorry, I encountered an error: " + (data.error || "Unknown error"), 'bot');
+        }
+      } catch (err) {
+        hideTyping();
+        btnSend.disabled = false;
+        addMessage("Network error. Please try again.", 'bot');
+      }
+    }
+
+    btnSend.addEventListener('click', sendMessage);
+    inputField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
 
   } // End of initWidget
 
