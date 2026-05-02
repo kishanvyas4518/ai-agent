@@ -344,38 +344,6 @@
       justify-content: center;
       gap: 4px;
     }
-    
-    #ai-emoji-picker {
-      display: none;
-      position: absolute;
-      bottom: 70px;
-      left: 10px;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 8px;
-      width: 250px;
-      max-height: 200px;
-      overflow-y: auto;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 4px;
-      z-index: 10;
-    }
-    #ai-emoji-picker::-webkit-scrollbar { width: 4px; }
-    #ai-emoji-picker::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-
-    .ai-emoji-item {
-      cursor: pointer;
-      font-size: 20px;
-      padding: 4px;
-      text-align: center;
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .ai-emoji-item:hover {
-      background: #f3f4f6;
-    }
 
     .ai-widget-typing {
       display: flex;
@@ -423,9 +391,10 @@
     `;
     document.head.appendChild(style);
 
-    const emojis = [
-      '😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👋','🤚','🖐','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦵','🦿','🦶','👣','👂','🦻','👃','🧠','🦷','🦴','👀','👁','👅','👄','💋','🩸'
-    ];
+    // Load Emoji Button library
+    const emojiScript = document.createElement('script');
+    emojiScript.src = "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js";
+    document.head.appendChild(emojiScript);
 
     // Build DOM
     const container = document.createElement('div');
@@ -465,9 +434,6 @@
         <div id="ai-widget-image-preview-container">
           <img id="ai-widget-image-preview" src="" alt="Preview">
           <div id="ai-widget-remove-image">&times;</div>
-        </div>
-        <div id="ai-emoji-picker">
-          ${emojis.map(e => `<div class="ai-emoji-item">${e}</div>`).join('')}
         </div>
         <div id="ai-widget-input-wrapper">
           <textarea id="ai-widget-input" placeholder="Type your message..." rows="1"></textarea>
@@ -522,7 +488,6 @@
     const inputField = document.getElementById('ai-widget-input');
     const btnSend = document.getElementById('ai-widget-send');
     const btnEmoji = document.getElementById('ai-widget-emoji-btn');
-    const emojiPicker = document.getElementById('ai-emoji-picker');
     const btnAttach = document.getElementById('ai-widget-attach-btn');
     const fileInput = document.getElementById('ai-widget-file-input');
     const titleEl = document.getElementById('ai-widget-title');
@@ -534,38 +499,33 @@
     let agentName = title; 
     let currentImage = null;
 
+    // Emoji Button Integration
+    emojiScript.onload = () => {
+      const picker = new EmojiButton({
+        position: 'top-start',
+        theme: 'light',
+        autoHide: false,
+        showSearch: true,
+        showVariants: true
+      });
+
+      picker.on('emoji', selection => {
+        const start = inputField.selectionStart;
+        const end = inputField.selectionEnd;
+        inputField.value = inputField.value.substring(0, start) + selection.emoji + inputField.value.substring(end);
+        inputField.selectionStart = inputField.selectionEnd = start + selection.emoji.length;
+        inputField.focus();
+        inputField.dispatchEvent(new Event('input'));
+      });
+
+      btnEmoji.addEventListener('click', () => picker.togglePicker(btnEmoji));
+    };
+
     // Auto-resize textarea
     inputField.addEventListener('input', function() {
       this.style.height = 'auto';
       this.style.height = (this.scrollHeight) + 'px';
       if(this.value === '') this.style.height = 'auto';
-    });
-
-    // Emoji picker toggle
-    btnEmoji.addEventListener('click', (e) => {
-      e.stopPropagation();
-      emojiPicker.style.display = emojiPicker.style.display === 'grid' ? 'none' : 'grid';
-    });
-    
-    // Close emoji picker on outside click
-    document.addEventListener('click', (e) => {
-      if (!emojiPicker.contains(e.target) && e.target !== btnEmoji) {
-        emojiPicker.style.display = 'none';
-      }
-    });
-
-    // Insert emoji
-    document.querySelectorAll('.ai-emoji-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        const emoji = e.target.textContent;
-        const start = inputField.selectionStart;
-        const end = inputField.selectionEnd;
-        inputField.value = inputField.value.substring(0, start) + emoji + inputField.value.substring(end);
-        inputField.selectionStart = inputField.selectionEnd = start + emoji.length;
-        inputField.focus();
-        emojiPicker.style.display = 'none';
-        inputField.dispatchEvent(new Event('input'));
-      });
     });
 
     // Attach button
@@ -622,7 +582,8 @@
     }
 
     function getCurrentTime() {
-      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      // Force 12-hour AM/PM format
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     }
 
     function addMessage(text, sender, time = getCurrentTime(), image = null) {
