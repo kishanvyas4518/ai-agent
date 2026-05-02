@@ -178,11 +178,13 @@
       padding: 0 4px;
     }
     .ai-widget-msg {
-      padding: 12px 16px;
+      padding: 10px 14px 22px 14px;
       font-size: 14px;
       line-height: 1.5;
       word-wrap: break-word;
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      position: relative;
+      min-width: 60px;
     }
     .ai-widget-msg-wrapper.user .ai-widget-msg {
       background-color: ${primaryColor}20; 
@@ -196,12 +198,12 @@
       border-radius: 16px 16px 16px 4px;
     }
     .ai-widget-timestamp {
-      font-size: 11px;
+      font-size: 10px;
       color: #9ca3af;
-      margin-top: 4px;
-      padding: 0 4px;
-      display: flex;
-      justify-content: flex-end;
+      position: absolute;
+      bottom: 4px;
+      right: 10px;
+      line-height: 1;
     }
 
     /* Simple markdown formatting overrides */
@@ -217,8 +219,42 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      position: relative;
     }
     
+    #ai-widget-image-preview-container {
+      display: none;
+      padding: 8px;
+      border-radius: 8px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 4px;
+      position: relative;
+      width: fit-content;
+    }
+    #ai-widget-image-preview {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 4px;
+      display: block;
+    }
+    #ai-widget-remove-image {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      border: 2px solid white;
+    }
+
     #ai-widget-input-wrapper {
       display: flex;
       align-items: flex-end;
@@ -279,7 +315,7 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background-color: #dc2626; /* Red styling as requested */
+      background-color: ${primaryColor};
       color: white;
       border: none;
       cursor: pointer;
@@ -319,10 +355,16 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 8px;
-      grid-template-columns: repeat(6, 1fr);
+      width: 250px;
+      max-height: 200px;
+      overflow-y: auto;
+      grid-template-columns: repeat(8, 1fr);
       gap: 4px;
       z-index: 10;
     }
+    #ai-emoji-picker::-webkit-scrollbar { width: 4px; }
+    #ai-emoji-picker::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
     .ai-emoji-item {
       cursor: pointer;
       font-size: 20px;
@@ -381,6 +423,10 @@
     `;
     document.head.appendChild(style);
 
+    const emojis = [
+      '😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👋','🤚','🖐','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦵','🦿','🦶','👣','👂','🦻','👃','🧠','🦷','🦴','👀','👁','👅','👄','💋','🩸'
+    ];
+
     // Build DOM
     const container = document.createElement('div');
     container.id = 'ai-widget-container';
@@ -416,8 +462,12 @@
       </div>
       
       <div id="ai-widget-input-container">
+        <div id="ai-widget-image-preview-container">
+          <img id="ai-widget-image-preview" src="" alt="Preview">
+          <div id="ai-widget-remove-image">&times;</div>
+        </div>
         <div id="ai-emoji-picker">
-          ${['😀','😂','🥰','😎','🤔','👍','🙏','🔥','✨','🎉','👏','💔'].map(e => `<div class="ai-emoji-item">${e}</div>`).join('')}
+          ${emojis.map(e => `<div class="ai-emoji-item">${e}</div>`).join('')}
         </div>
         <div id="ai-widget-input-wrapper">
           <textarea id="ai-widget-input" placeholder="Type your message..." rows="1"></textarea>
@@ -476,9 +526,13 @@
     const btnAttach = document.getElementById('ai-widget-attach-btn');
     const fileInput = document.getElementById('ai-widget-file-input');
     const titleEl = document.getElementById('ai-widget-title');
+    const previewContainer = document.getElementById('ai-widget-image-preview-container');
+    const previewImg = document.getElementById('ai-widget-image-preview');
+    const btnRemoveImage = document.getElementById('ai-widget-remove-image');
 
     let isOpen = false;
     let agentName = title; 
+    let currentImage = null;
 
     // Auto-resize textarea
     inputField.addEventListener('input', function() {
@@ -510,20 +564,31 @@
         inputField.selectionStart = inputField.selectionEnd = start + emoji.length;
         inputField.focus();
         emojiPicker.style.display = 'none';
-        // trigger resize
         inputField.dispatchEvent(new Event('input'));
       });
     });
 
-    // Attach button simulation
+    // Attach button
     btnAttach.addEventListener('click', () => {
       fileInput.click();
     });
     fileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files[0]) {
-        addMessage(`[Image Attached: ${e.target.files[0].name}] Note: Image processing is pending backend support.`, 'user');
-        e.target.value = '';
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          currentImage = event.target.result;
+          previewImg.src = currentImage;
+          previewContainer.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
       }
+    });
+
+    btnRemoveImage.addEventListener('click', () => {
+      currentImage = null;
+      fileInput.value = '';
+      previewContainer.style.display = 'none';
     });
 
     const storageKey = `ai_chat_history_${agentKey}`;
@@ -560,7 +625,7 @@
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-    function addMessage(text, sender, time = getCurrentTime()) {
+    function addMessage(text, sender, time = getCurrentTime(), image = null) {
       const wrapper = document.createElement('div');
       wrapper.className = 'ai-widget-msg-wrapper ' + sender;
       
@@ -571,18 +636,31 @@
 
       const msgEl = document.createElement('div');
       msgEl.className = 'ai-widget-msg';
-      if (sender === 'bot') {
-        msgEl.innerHTML = parseMarkdown(text);
-      } else {
-        msgEl.textContent = text;
+      
+      if (image) {
+        const img = document.createElement('img');
+        img.src = image;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        img.style.marginBottom = '8px';
+        img.style.display = 'block';
+        msgEl.appendChild(img);
       }
-      wrapper.appendChild(msgEl);
+
+      const textNode = document.createElement('div');
+      if (sender === 'bot') {
+        textNode.innerHTML = parseMarkdown(text);
+      } else {
+        textNode.textContent = text;
+      }
+      msgEl.appendChild(textNode);
 
       const timeEl = document.createElement('div');
       timeEl.className = 'ai-widget-timestamp';
       timeEl.textContent = time;
-      wrapper.appendChild(timeEl);
+      msgEl.appendChild(timeEl);
 
+      wrapper.appendChild(msgEl);
       messagesDiv.appendChild(wrapper);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
@@ -592,8 +670,7 @@
         addMessage("Hi there! How can I assist you today?", 'bot');
       } else {
         chatHistory.forEach(msg => {
-          // Default to current time for history since we didn't save time in DB/storage before
-          addMessage(msg.text, msg.role, msg.time || getCurrentTime());
+          addMessage(msg.text, msg.role, msg.time || getCurrentTime(), msg.image);
         });
       }
     }
@@ -626,14 +703,22 @@
 
     async function sendMessage() {
       const text = inputField.value.trim();
-      if (!text) return;
+      if (!text && !currentImage) return;
+
+      const messageText = text || (currentImage ? "[Image Sent]" : "");
+      const imageToSend = currentImage;
 
       inputField.value = '';
-      inputField.style.height = 'auto'; // Reset height
+      inputField.style.height = 'auto';
       btnSend.disabled = true;
       
+      // Clear image preview
+      currentImage = null;
+      fileInput.value = '';
+      previewContainer.style.display = 'none';
+      
       const sendTime = getCurrentTime();
-      addMessage(text, 'user', sendTime);
+      addMessage(messageText, 'user', sendTime, imageToSend);
       showTyping();
 
       try {
@@ -644,7 +729,10 @@
             'x-client-secret': clientSecret,
             'x-agent-key': agentKey
           },
-          body: JSON.stringify({ message: text, history: chatHistory.map(h => ({ role: h.role, text: h.text })) }) // Only send role/text
+          body: JSON.stringify({ 
+            message: messageText, 
+            history: chatHistory.map(h => ({ role: h.role, text: h.text })) 
+          })
         });
 
         const data = await response.json();
@@ -659,7 +747,7 @@
           }
           const replyTime = getCurrentTime();
           addMessage(data.reply, 'bot', replyTime);
-          chatHistory.push({ role: 'user', text: text, time: sendTime });
+          chatHistory.push({ role: 'user', text: messageText, time: sendTime, image: imageToSend });
           chatHistory.push({ role: 'bot', text: data.reply, time: replyTime });
           syncHistoryToStorage();
         } else {
