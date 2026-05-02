@@ -13,6 +13,13 @@
       return;
     }
 
+    const EMOJI_LIST = [
+      { cat: "Smileys", icons: ["😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠","😈","👿","👹","👺","🤡","👻","💀","☠️","👽","👾","🤖","🎃","😺","😸","😹","😻","😼","😽","🙀","😿","😾"] },
+      { cat: "Gestures", icons: ["👋","🤚","🖐","✋","🖖","👌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦵","🦿","🦶","👣","👂","🦻","👃","🧠","🦷","🦴","👀","👁","👅","👄","💋","🩸"] },
+      { cat: "People", icons: ["👶","👧","🧒","👦","👩","🧑","👨","👩‍🦱","🧑‍🦱","👨‍🦱","👩‍🦰","🧑‍🦰","👨‍🦰","👱‍♀️","👱","👱‍♂️","👩‍🦳","🧑‍🦳","👨‍🦳","👩‍🦲","🧑‍🦲","👨‍🦲","🧔","👵","🧓","👴","👲","👳‍♀️","👳","👳‍♂️","🧕","👮‍♀️","👮","👮‍♂️","👷‍♀️","👷","👷‍♂️","💂‍♀️","💂","💂‍♂️","🕵️‍♀️","🕵️","🕵️‍♂️","👩‍⚕️","🧑‍⚕️","👨‍⚕️","👩‍🌾","🧑‍🌾","👨‍🌾","👩‍🍳","🧑‍🍳","👨‍🍳","👩‍🎓","🧑‍🎓","👨‍🎓","👩‍🎤","🧑‍🎤","👨‍🎤","👩‍🏫","🧑‍🏫","👨‍🏫","👩‍🏭","🧑‍🏭","👨‍🏭","👩‍💻","🧑‍💻","👨‍💻","👩‍💼","🧑‍💼","👨‍💼","👩‍🔧","🧑‍🔧","👨‍🔧","👩‍🔬","🧑‍🔬","👨‍🔬","👩‍🎨","🧑‍🎨","👨‍🎨","👩‍🚒","🧑‍🚒","👨‍🚒","👩‍✈️","🧑‍✈️","👨‍✈️","👩‍🚀","🧑‍🚀","👨‍🚀","👩‍⚖️","🧑‍⚖️","👨‍⚖️","👰","🤵","👸","🤴","🦸‍♀️","🦸","🦸‍♂️","🦹‍♀️","🦹","🦹‍♂️","🤶","🧑‍🎄","🎅","🧙‍♀️","🧙","🧙‍♂️","🧝‍♀️","🧝","🧝‍♂️","🧛‍♀️","🧛","🧛‍♂️","🧟‍♀️","🧟","🧟‍♂️","🧞‍♀️","🧞","🧞‍♂️","🧜‍♀️","🧜","🧜‍♂️","🧚‍♀️","🧚","🧚‍♂️","👼","🤰","🤱","🙇‍♀️","🙇","🙇‍♂️","💁‍♀️","💁","💁‍♂️","🙅‍♀️","🙅","🙅‍♂️","🙆‍♀️","🙆","🙆‍♂️","🙋‍♀️","🙋","🙋‍♂️","🧏‍♀️","🧏","🧏‍♂️","🙎‍♀️","🙎","🙎‍♂️","🙍‍♀️","🙍","🙍‍♂️","💇‍♀️","💇","💇‍♂️","💆‍♀️","💆","💆‍♂️","🧖‍♀️","🧖","🧖‍♂️","💅","🤳","💃","🕺","👯‍♀️","👯","👯‍♂️","🕴","👩‍🦽","🧑‍🦽","👨‍🦽","👩‍🦼","🧑‍🦼","👨‍🦼","🚶‍♀️","🚶","🚶‍♂️","👩‍🦯","🧑‍🦯","👨‍🦯","🏃‍♀️","🏃","🏃‍♂️","👫","👭","👬","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","👨‍👩‍👦","👨‍👩‍👧","👨‍👩‍👧‍👦","👨‍👩‍👦‍👦","👨‍👩‍👧‍👧","👩‍👩‍👦","👩‍👩‍👧","👩‍👩‍👧‍👦","👩‍👩‍👦‍👦","👩‍👩‍👧‍👧","👨‍👨‍👦","👨‍👨‍👧","👨‍👨‍👧‍👦","👨‍👨‍👦‍👦","👨‍👨‍👧‍👧","👩‍👦","👩‍👧","👩‍👧‍👦","👩‍👦‍👦","👩‍👧‍👧","👨‍👦","👨‍👧","👨‍👧‍👦","👨‍👦‍👦","👨‍👧‍👧"] },
+      { cat: "Nature", icons: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐽","🐸","🐵","🙈","🙉","🙊","🐒","🐔","🐧","🐦","🐤","🐣","🐥","🦆","🦢","🦉","🦚","🦜","🐸","🐊","🐢","🦎","🐍","🐲","🐉","🦕","🦖","🐳","🐋","🐬","🐟","🐠","🐡","🦈","🐙","🐚","🐌","🦋","🐛","🐜","🐝","🐞","🦗","🕷","🕸","🦂","🦟","🦠","💐","🌸","💮","🏵️","🌹","🥀","🌺","🌻","🌼","🌷","🌱","🌲","🌳","🌴","🌵","🌾","🌿","☘️","🍀","🍁","🍂","🍃"] }
+    ];
+
     // Inject CSS
     const style = document.createElement('style');
     style.innerHTML = `
@@ -178,7 +185,7 @@
       padding: 0 4px;
     }
     .ai-widget-msg {
-      padding: 10px 14px 22px 14px;
+      padding: 10px 14px 20px 14px;
       font-size: 14px;
       line-height: 1.5;
       word-wrap: break-word;
@@ -201,7 +208,7 @@
       font-size: 10px;
       color: #9ca3af;
       position: absolute;
-      bottom: 4px;
+      bottom: 6px;
       right: 10px;
       line-height: 1;
     }
@@ -222,31 +229,38 @@
       position: relative;
     }
     
-    #ai-widget-image-preview-container {
+    #ai-widget-image-previews {
       display: none;
       padding: 8px;
-      border-radius: 8px;
+      border-radius: 12px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
       margin-bottom: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ai-widget-preview-item {
       position: relative;
-      width: fit-content;
+      width: 60px;
+      height: 60px;
     }
-    #ai-widget-image-preview {
-      max-width: 100px;
-      max-height: 100px;
-      border-radius: 4px;
-      display: block;
+    .ai-widget-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
     }
-    #ai-widget-remove-image {
+    .ai-widget-preview-remove {
       position: absolute;
-      top: -8px;
-      right: -8px;
+      top: -6px;
+      right: -6px;
       background: #ef4444;
       color: white;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -344,6 +358,66 @@
       justify-content: center;
       gap: 4px;
     }
+    
+    #ai-emoji-picker-container {
+      display: none;
+      position: absolute;
+      bottom: 70px;
+      left: 10px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      width: 280px;
+      height: 300px;
+      z-index: 1000;
+      flex-direction: column;
+      overflow: hidden;
+      animation: ai-widget-pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes ai-widget-pop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    #ai-emoji-search {
+      padding: 10px;
+      border: none;
+      border-bottom: 1px solid #e5e7eb;
+      outline: none;
+      font-size: 14px;
+      width: 100%;
+    }
+    #ai-emoji-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ai-emoji-cat-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .ai-emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .ai-emoji-item {
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+      text-align: center;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .ai-emoji-item:hover {
+      background: #f3f4f6;
+    }
 
     .ai-widget-typing {
       display: flex;
@@ -391,11 +465,6 @@
     `;
     document.head.appendChild(style);
 
-    // Load Emoji Button library
-    const emojiScript = document.createElement('script');
-    emojiScript.src = "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js";
-    document.head.appendChild(emojiScript);
-
     // Build DOM
     const container = document.createElement('div');
     container.id = 'ai-widget-container';
@@ -431,9 +500,10 @@
       </div>
       
       <div id="ai-widget-input-container">
-        <div id="ai-widget-image-preview-container">
-          <img id="ai-widget-image-preview" src="" alt="Preview">
-          <div id="ai-widget-remove-image">&times;</div>
+        <div id="ai-widget-image-previews"></div>
+        <div id="ai-emoji-picker-container">
+          <input type="text" id="ai-emoji-search" placeholder="Search emojis...">
+          <div id="ai-emoji-list"></div>
         </div>
         <div id="ai-widget-input-wrapper">
           <textarea id="ai-widget-input" placeholder="Type your message..." rows="1"></textarea>
@@ -451,7 +521,7 @@
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
               </svg>
             </button>
-            <input type="file" id="ai-widget-file-input" accept="image/*">
+            <input type="file" id="ai-widget-file-input" accept="image/*" multiple>
           </div>
           <button id="ai-widget-send">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -488,44 +558,73 @@
     const inputField = document.getElementById('ai-widget-input');
     const btnSend = document.getElementById('ai-widget-send');
     const btnEmoji = document.getElementById('ai-widget-emoji-btn');
+    const emojiPicker = document.getElementById('ai-emoji-picker-container');
+    const emojiSearch = document.getElementById('ai-emoji-search');
+    const emojiList = document.getElementById('ai-emoji-list');
     const btnAttach = document.getElementById('ai-widget-attach-btn');
     const fileInput = document.getElementById('ai-widget-file-input');
     const titleEl = document.getElementById('ai-widget-title');
-    const previewContainer = document.getElementById('ai-widget-image-preview-container');
-    const previewImg = document.getElementById('ai-widget-image-preview');
-    const btnRemoveImage = document.getElementById('ai-widget-remove-image');
+    const previewsContainer = document.getElementById('ai-widget-image-previews');
 
     let isOpen = false;
     let agentName = title; 
-    let currentImage = null;
+    let currentImages = []; // Support multiple images
 
-    // Emoji Button Integration
-    emojiScript.onload = () => {
-      const picker = new EmojiButton({
-        position: 'top-start',
-        theme: 'light',
-        autoHide: false,
-        showSearch: true,
-        showVariants: true
+    // Emoji Logic
+    function renderEmojis(filter = "") {
+      emojiList.innerHTML = "";
+      EMOJI_LIST.forEach(category => {
+        const filtered = category.icons.filter(icon => !filter || icon.includes(filter));
+        if (filtered.length > 0) {
+          const catDiv = document.createElement('div');
+          catDiv.innerHTML = `<div class="ai-emoji-cat-title">${category.cat}</div>`;
+          const grid = document.createElement('div');
+          grid.className = 'ai-emoji-grid';
+          filtered.forEach(icon => {
+            const item = document.createElement('div');
+            item.className = 'ai-emoji-item';
+            item.textContent = icon;
+            item.onclick = () => {
+              const start = inputField.selectionStart;
+              const end = inputField.selectionEnd;
+              inputField.value = inputField.value.substring(0, start) + icon + inputField.value.substring(end);
+              inputField.selectionStart = inputField.selectionEnd = start + icon.length;
+              inputField.focus();
+              inputField.dispatchEvent(new Event('input'));
+              emojiPicker.style.display = 'none';
+            };
+            grid.appendChild(item);
+          });
+          catDiv.appendChild(grid);
+          emojiList.appendChild(catDiv);
+        }
       });
+    }
 
-      picker.on('emoji', selection => {
-        const start = inputField.selectionStart;
-        const end = inputField.selectionEnd;
-        inputField.value = inputField.value.substring(0, start) + selection.emoji + inputField.value.substring(end);
-        inputField.selectionStart = inputField.selectionEnd = start + selection.emoji.length;
-        inputField.focus();
-        inputField.dispatchEvent(new Event('input'));
-      });
-
-      btnEmoji.addEventListener('click', () => picker.togglePicker(btnEmoji));
+    btnEmoji.onclick = (e) => {
+      e.stopPropagation();
+      const isVisible = emojiPicker.style.display === 'flex';
+      emojiPicker.style.display = isVisible ? 'none' : 'flex';
+      if (!isVisible) {
+        renderEmojis();
+        emojiSearch.value = "";
+        emojiSearch.focus();
+      }
     };
 
+    emojiSearch.oninput = (e) => renderEmojis(e.target.value);
+    
+    document.addEventListener('click', (e) => {
+      if (!emojiPicker.contains(e.target) && e.target !== btnEmoji) {
+        emojiPicker.style.display = 'none';
+      }
+    });
+
     // Auto-resize textarea
-    inputField.addEventListener('input', function() {
+    inputField.addEventListener('input', function () {
       this.style.height = 'auto';
       this.style.height = (this.scrollHeight) + 'px';
-      if(this.value === '') this.style.height = 'auto';
+      if (this.value === '') this.style.height = 'auto';
     });
 
     // Attach button
@@ -533,23 +632,40 @@
       fileInput.click();
     });
     fileInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          currentImage = event.target.result;
-          previewImg.src = currentImage;
-          previewContainer.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+      if (e.target.files) {
+        Array.from(e.target.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const dataUrl = event.target.result;
+            currentImages.push(dataUrl);
+            renderPreviews();
+          };
+          reader.readAsDataURL(file);
+        });
       }
     });
 
-    btnRemoveImage.addEventListener('click', () => {
-      currentImage = null;
-      fileInput.value = '';
-      previewContainer.style.display = 'none';
-    });
+    function renderPreviews() {
+      previewsContainer.innerHTML = "";
+      if (currentImages.length === 0) {
+        previewsContainer.style.display = 'none';
+        return;
+      }
+      previewsContainer.style.display = 'flex';
+      currentImages.forEach((imgData, idx) => {
+        const div = document.createElement('div');
+        div.className = 'ai-widget-preview-item';
+        div.innerHTML = `
+          <img src="${imgData}" class="ai-widget-preview-img">
+          <div class="ai-widget-preview-remove" data-idx="${idx}">&times;</div>
+        `;
+        div.querySelector('.ai-widget-preview-remove').onclick = () => {
+          currentImages.splice(idx, 1);
+          renderPreviews();
+        };
+        previewsContainer.appendChild(div);
+      });
+    }
 
     const storageKey = `ai_chat_history_${agentKey}`;
 
@@ -582,14 +698,13 @@
     }
 
     function getCurrentTime() {
-      // Force 12-hour AM/PM format
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     }
 
-    function addMessage(text, sender, time = getCurrentTime(), image = null) {
+    function addMessage(text, sender, time = getCurrentTime(), images = []) {
       const wrapper = document.createElement('div');
       wrapper.className = 'ai-widget-msg-wrapper ' + sender;
-      
+
       const senderName = document.createElement('div');
       senderName.className = 'ai-widget-sender-name';
       senderName.textContent = sender === 'user' ? 'You' : agentName;
@@ -597,15 +712,22 @@
 
       const msgEl = document.createElement('div');
       msgEl.className = 'ai-widget-msg';
-      
-      if (image) {
-        const img = document.createElement('img');
-        img.src = image;
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '8px';
-        img.style.marginBottom = '8px';
-        img.style.display = 'block';
-        msgEl.appendChild(img);
+
+      if (images && images.length > 0) {
+        const imgGrid = document.createElement('div');
+        imgGrid.style.display = 'flex';
+        imgGrid.style.flexWrap = 'wrap';
+        imgGrid.style.gap = '4px';
+        imgGrid.style.marginBottom = '8px';
+        images.forEach(imgData => {
+          const img = document.createElement('img');
+          img.src = imgData;
+          img.style.maxWidth = images.length > 1 ? '48%' : '100%';
+          img.style.borderRadius = '8px';
+          img.style.display = 'block';
+          imgGrid.appendChild(img);
+        });
+        msgEl.appendChild(imgGrid);
       }
 
       const textNode = document.createElement('div');
@@ -631,7 +753,7 @@
         addMessage("Hi there! How can I assist you today?", 'bot');
       } else {
         chatHistory.forEach(msg => {
-          addMessage(msg.text, msg.role, msg.time || getCurrentTime(), msg.image);
+          addMessage(msg.text, msg.role, msg.time || getCurrentTime(), msg.images || []);
         });
       }
     }
@@ -642,7 +764,7 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'ai-widget-msg-wrapper bot';
       wrapper.id = 'ai-widget-typing-indicator-wrapper';
-      
+
       const senderName = document.createElement('div');
       senderName.className = 'ai-widget-sender-name';
       senderName.textContent = agentName;
@@ -652,7 +774,7 @@
       el.className = 'ai-widget-typing';
       el.innerHTML = '<div class="ai-widget-dot"></div><div class="ai-widget-dot"></div><div class="ai-widget-dot"></div>';
       wrapper.appendChild(el);
-      
+
       messagesDiv.appendChild(wrapper);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
@@ -664,22 +786,22 @@
 
     async function sendMessage() {
       const text = inputField.value.trim();
-      if (!text && !currentImage) return;
+      if (!text && currentImages.length === 0) return;
 
-      const messageText = text || (currentImage ? "[Image Sent]" : "");
-      const imageToSend = currentImage;
+      const messageText = text || (currentImages.length > 0 ? "[Images Sent]" : "");
+      const imagesToSend = [...currentImages];
 
       inputField.value = '';
       inputField.style.height = 'auto';
       btnSend.disabled = true;
-      
-      // Clear image preview
-      currentImage = null;
+
+      // Clear image previews
+      currentImages = [];
       fileInput.value = '';
-      previewContainer.style.display = 'none';
-      
+      renderPreviews();
+
       const sendTime = getCurrentTime();
-      addMessage(messageText, 'user', sendTime, imageToSend);
+      addMessage(messageText, 'user', sendTime, imagesToSend);
       showTyping();
 
       try {
@@ -690,9 +812,9 @@
             'x-client-secret': clientSecret,
             'x-agent-key': agentKey
           },
-          body: JSON.stringify({ 
-            message: messageText, 
-            history: chatHistory.map(h => ({ role: h.role, text: h.text })) 
+          body: JSON.stringify({
+            message: messageText,
+            history: chatHistory.map(h => ({ role: h.role, text: h.text }))
           })
         });
 
@@ -708,7 +830,7 @@
           }
           const replyTime = getCurrentTime();
           addMessage(data.reply, 'bot', replyTime);
-          chatHistory.push({ role: 'user', text: messageText, time: sendTime, image: imageToSend });
+          chatHistory.push({ role: 'user', text: messageText, time: sendTime, images: imagesToSend });
           chatHistory.push({ role: 'bot', text: data.reply, time: replyTime });
           syncHistoryToStorage();
         } else {
@@ -721,14 +843,13 @@
       }
     }
 
-    btnSend.addEventListener('click', sendMessage);
-    inputField.addEventListener('keydown', (e) => {
+    btnSend.onclick = sendMessage;
+    inputField.onkeydown = (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
       }
-    });
-
+    };
   }
 
   if (document.readyState === 'loading') {
