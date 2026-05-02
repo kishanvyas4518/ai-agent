@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BookOpen, Link as LinkIcon, FileText, MessageCircleQuestion, Upload, Trash2, Plus, Type, Loader2, ArrowLeft } from 'lucide-react';
+import { BookOpen, Link as LinkIcon, FileText, MessageCircleQuestion, Upload, Trash2, Plus, Type, Loader2, ArrowLeft, Eye, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useParams, Link } from 'react-router-dom';
 
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [qnaPairs, setQnaPairs] = useState([{ q: '', a: '' }]);
 
   const [history, setHistory] = useState([]);
+  const [viewingKnowledge, setViewingKnowledge] = useState(null);
 
   useEffect(() => {
     if(agentId && token) {
@@ -157,7 +158,8 @@ export default function Dashboard() {
 };`;
 
   return (
-    <div className="p-10 max-w-[1200px] w-full mx-auto max-md:p-5 h-full overflow-y-auto pb-20">
+    <>
+      <div className="p-10 max-w-[1200px] w-full mx-auto max-md:p-5 h-full overflow-y-auto pb-20">
       <Link to="/home" className="flex items-center gap-2 text-slate-400 hover:text-white mb-6 text-sm transition-colors w-fit font-medium">
         <ArrowLeft size={16} /> Back to Overview
       </Link>
@@ -360,10 +362,15 @@ export default function Dashboard() {
                         : <span className="flex items-center gap-1.5 text-xs text-yellow-500 font-bold"><Loader2 size={12} className="animate-spin" /> Processing</span>
                       }
                     </td>
-                    <td className="p-4 text-center">
-                      <button onClick={() => handleDelete(h.id)} className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
-                        <Trash2 size={16} />
-                      </button>
+                    <td className="p-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button onClick={() => setViewingKnowledge(h)} className="p-2 text-slate-500 hover:text-[#10b981] hover:bg-[#10b981]/10 rounded-lg transition-colors" title="View Details">
+                          <Eye size={16} />
+                        </button>
+                        <button onClick={() => handleDelete(h.id)} className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -374,5 +381,59 @@ export default function Dashboard() {
       </div>
 
     </div>
+
+      {/* View Modal */}
+      {viewingKnowledge && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#18181b] border border-[#27272a] rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[80vh]">
+            <div className="p-6 border-b border-[#27272a] flex justify-between items-center bg-[#18181b] sticky top-0 rounded-t-2xl z-10">
+              <div>
+                <h3 className="text-xl font-bold text-slate-100">{viewingKnowledge.title}</h3>
+                <p className="text-sm text-slate-400 mt-1">Type: {viewingKnowledge.type}</p>
+              </div>
+              <button onClick={() => setViewingKnowledge(null)} className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto">
+              {viewingKnowledge.type === 'QNA' ? (
+                <div className="space-y-4">
+                  {(() => {
+                    try {
+                      const pairs = JSON.parse(viewingKnowledge.content);
+                      return pairs.map((p, i) => (
+                        <div key={i} className="bg-black/30 p-4 rounded-xl border border-[#27272a]">
+                          <p className="font-bold text-[#10b981] mb-2">Q: <span className="text-slate-200 font-medium">{p.q}</span></p>
+                          <p className="text-slate-400 font-medium">A: <span className="text-slate-300 font-normal">{p.a}</span></p>
+                        </div>
+                      ));
+                    } catch (e) {
+                      return <p className="text-slate-300 whitespace-pre-wrap">{viewingKnowledge.content}</p>;
+                    }
+                  })()}
+                </div>
+              ) : viewingKnowledge.type === 'LINK' ? (
+                <div className="bg-black/30 p-5 rounded-xl border border-[#27272a]">
+                  <p className="text-slate-400 mb-2">URL:</p>
+                  <a href={viewingKnowledge.content} target="_blank" rel="noreferrer" className="text-[#10b981] hover:underline break-all">
+                    {viewingKnowledge.content}
+                  </a>
+                </div>
+              ) : viewingKnowledge.type === 'FILE' ? (
+                <div className="bg-black/30 p-5 rounded-xl border border-[#27272a]">
+                  <p className="text-slate-400 mb-2">File Info:</p>
+                  <p className="text-slate-200">{viewingKnowledge.content}</p>
+                  <p className="text-sm text-slate-500 mt-4 italic">Note: File contents are extracted and vectorized securely. Only the reference is shown here.</p>
+                </div>
+              ) : (
+                <div className="bg-black/30 p-5 rounded-xl border border-[#27272a]">
+                  <pre className="text-slate-300 whitespace-pre-wrap font-sans text-sm">{viewingKnowledge.content}</pre>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
